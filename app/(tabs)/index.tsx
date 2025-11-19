@@ -1,5 +1,5 @@
 import Carousel from "@/components/my/Carousel";
-import { Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 export default function HomeScreen() {
   const mockItems = [
@@ -31,10 +31,14 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, padding: 16 }}>
-      <View>
-        <Text style={{ color: "white" }}>Sono Home</Text>
+      <LinearGradient
+        colors={["#567dfcff", "#f0f87fff"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ flex: 1, padding: 16 }}
+      >
         <Carousel items={mockItems} />
-      </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 }

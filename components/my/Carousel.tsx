@@ -1,4 +1,5 @@
 import styles from "@/styles/styles";
+import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 import { Image, ImageSourcePropType, Text, View } from "react-native";
 
@@ -33,20 +34,25 @@ export default function Carousel({ items }: CarouselProps) {
   };
 
   useEffect(() => {
-    handleChangePage();
+    handleChangePage(); /*ad ogni variazione di currentPage, viene rieseguita la funzione, in modo da prendere una parte diversa dell'array */
   }, [currentPage]);
 
   return (
     <View style={styles.containerCarousel}>
-      <View style={styles.containerCarouselPages}>
+      <LinearGradient
+        colors={["#6486f8ff", "#c5d8fcff", "#fcfcfcff"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.containerCarouselPages}
+      >
         {itemsToShow.length > 0 &&
           itemsToShow.map((item) => (
             <View style={styles.containerCarouselPage} key={item.id}>
-              <Text style={styles.titleItem}>Titolo: {item.title}</Text>
               <Image style={styles.imageItem} source={item.image} />
+              <Text style={styles.titleItem}>Titolo: {item.title}</Text>
             </View>
           ))}
-      </View>
+      </LinearGradient>
     </View>
   );
 }
