@@ -14,15 +14,14 @@ const styles = StyleSheet.create({
     padding: 24,
     borderRadius: 16,
     gap: 10,
-    borderWidth: 2,
-    borderColor: "red",
   },
   containerCarouselPage: {
     justifyContent: "space-around",
     alignItems: "center",
     gap: 10,
-    borderWidth: 2,
-    borderColor: "green",
+    borderRadius: 16,
+    backgroundColor: "white",
+    padding: 8,
   },
   titleItem: {
     fontSize: 16,
