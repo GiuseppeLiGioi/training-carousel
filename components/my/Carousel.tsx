@@ -23,13 +23,15 @@ type CarouselItem = {
 type CarouselProps = {
   items: CarouselItem[];
   direction: "horizontal" | "vertical";
+  delay?: number;
 };
-export default function Carousel({ items, direction }: CarouselProps) {
+export default function Carousel({ items, direction, delay }: CarouselProps) {
   const [currentPage, setCurrentPage] =
     useState<number>(
       0
     ); /*stato che tiene conto della PAGINA, contenente due items, da mostrare */
   const ItemsPerPage: number = 2; /*costante, due items alla volta per pagina visualizzata nel carosello */
+  const totalPages = Math.ceil(items.length / ItemsPerPage);
 
   const pages: CarouselItem[][] =
     []; /*ogni mia page, diventerà a sua volta un sottoArray con tipo CarouselItem[] di 2 item alla volta */
@@ -39,7 +41,21 @@ export default function Carousel({ items, direction }: CarouselProps) {
     ); /*start = i, end = l'indice del secondo item nella coppia */
   }
 
-  useEffect(() => {}, [currentPage]);
+  useEffect(() => {
+    if (!delay) return;
+
+    const timer = setTimeout(() => {
+      let nextPage = currentPage + 1;
+      if (nextPage >= totalPages) {
+        nextPage = 0;
+
+        /*qui metterò la logica di scroll automatico */
+      }
+      setCurrentPage(nextPage);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [currentPage, delay]);
 
   const scrollDirection = direction === "horizontal" ? true : false;
 
@@ -79,7 +95,7 @@ export default function Carousel({ items, direction }: CarouselProps) {
                     (
                       item /*ed uno interno per iterare sulle coppie di item per ogni sub-array */
                     ) => (
-                      <View style={styles.containerSinglePage}>
+                      <View style={styles.containerSinglePage} key={item.id}>
                         <Image style={styles.imageItem} source={item.image} />
                         <Text style={styles.titleItem}>
                           Titolo: {item.title}
