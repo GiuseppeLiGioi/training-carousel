@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   containerCarousel: {
     flex: 1,
-    padding: 16,
+    padding: 6,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -11,11 +11,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 24,
+    padding: 6,
     borderRadius: 16,
-    gap: 10,
+    width: "100%",
+    maxHeight: 160,
   },
+
   containerCarouselPage: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignSelf: "center",
+    gap: 10,
+    borderRadius: 16,
+    backgroundColor: "#f0f0f0",
+    padding: 12,
+  },
+  containerSinglePage: {
     justifyContent: "space-around",
     alignItems: "center",
     gap: 10,

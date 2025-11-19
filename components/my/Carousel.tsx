@@ -1,7 +1,18 @@
 import styles from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
-import { Image, ImageSourcePropType, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  ImageSourcePropType,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+const screenWidth =
+  Dimensions.get(
+    "window"
+  ).width; /*Grazie al Dimensions, native di native, ottengo la larghezaza dello schermo */
 
 type CarouselItem = {
   id: number;
@@ -11,31 +22,26 @@ type CarouselItem = {
 
 type CarouselProps = {
   items: CarouselItem[];
+  direction: "horizontal" | "vertical";
 };
-export default function Carousel({ items }: CarouselProps) {
+export default function Carousel({ items, direction }: CarouselProps) {
   const [currentPage, setCurrentPage] =
     useState<number>(
       0
     ); /*stato che tiene conto della PAGINA, contenente due items, da mostrare */
-  const [itemsToShow, setItemsToShow] = useState<CarouselItem[]>([]);
   const ItemsPerPage: number = 2; /*costante, due items alla volta per pagina visualizzata nel carosello */
-  const handleChangePage = () => {
-    const startIndex =
-      currentPage *
-      ItemsPerPage; /*il risultato ci darà l'indice del primo item della coppia di items da mostare */
-    const endIndex =
-      startIndex +
-      ItemsPerPage; /*il risultato ci darà l'indice dell'ultimo e secondo item della coppia di items da mostare */
-    const dataToShow = items.slice(
-      startIndex,
-      endIndex
-    ); /*uso lo slice per estrarre dall'array solo la parte interessata volta per volta */
-    setItemsToShow(dataToShow);
-  };
 
-  useEffect(() => {
-    handleChangePage(); /*ad ogni variazione di currentPage, viene rieseguita la funzione, in modo da prendere una parte diversa dell'array */
-  }, [currentPage]);
+  const pages: CarouselItem[][] =
+    []; /*ogni mia page, diventerà a sua volta un sottoArray con tipo CarouselItem[] di 2 item alla volta */
+  for (let i = 0; i < items.length; i += ItemsPerPage) {
+    pages.push(
+      items.slice(i, i + ItemsPerPage)
+    ); /*start = i, end = l'indice del secondo item nella coppia */
+  }
+
+  useEffect(() => {}, [currentPage]);
+
+  const scrollDirection = direction === "horizontal" ? true : false;
 
   return (
     <View style={styles.containerCarousel}>
@@ -45,13 +51,46 @@ export default function Carousel({ items }: CarouselProps) {
         end={{ x: 1, y: 1 }}
         style={styles.containerCarouselPages}
       >
-        {itemsToShow.length > 0 &&
-          itemsToShow.map((item) => (
-            <View style={styles.containerCarouselPage} key={item.id}>
-              <Image style={styles.imageItem} source={item.image} />
-              <Text style={styles.titleItem}>Titolo: {item.title}</Text>
-            </View>
-          ))}
+        <ScrollView
+          horizontal={scrollDirection}
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+        >
+          {pages.length > 0 &&
+            pages.map(
+              (
+                pageItems,
+                pageIndex /*pages è un array di array quindi serviranno due map, uno esterno per selezionare tutti e 4 i sub-array */
+              ) => (
+                <View
+                  style={[
+                    styles.containerCarouselPage,
+                    direction === "horizontal"
+                      ? {
+                          width: screenWidth - 90,
+                        } /*evito che si veda la pagina successiva dalla precedente. */
+                      : {
+                          height: 150,
+                        } /*altezza limitata per consentire lo scroll verticalmente, altrimenti avrei scrollView normale */,
+                  ]}
+                  key={pageIndex}
+                >
+                  {pageItems.map(
+                    (
+                      item /*ed uno interno per iterare sulle coppie di item per ogni sub-array */
+                    ) => (
+                      <View style={styles.containerSinglePage}>
+                        <Image style={styles.imageItem} source={item.image} />
+                        <Text style={styles.titleItem}>
+                          Titolo: {item.title}
+                        </Text>
+                      </View>
+                    )
+                  )}
+                </View>
+              )
+            )}
+        </ScrollView>
       </LinearGradient>
     </View>
   );
