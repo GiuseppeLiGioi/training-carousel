@@ -37,7 +37,7 @@ export default function HomeScreen() {
         end={{ x: 1, y: 1 }}
         style={{ flex: 1, padding: 16 }}
       >
-        <Carousel items={mockItems} direction="horizontal" delay={3000} />
+        <Carousel items={mockItems} direction="vertical" delay={2000} />
       </LinearGradient>
     </SafeAreaView>
   );

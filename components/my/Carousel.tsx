@@ -1,6 +1,6 @@
 import styles from "@/styles/styles";
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -12,7 +12,7 @@ import {
 const screenWidth =
   Dimensions.get(
     "window"
-  ).width; /*Grazie al Dimensions, native di native, ottengo la larghezaza dello schermo */
+  ).width; /*Grazie al Dimensions, nativo di native, ottengo la larghezza dello schermo */
 
 type CarouselItem = {
   id: number;
@@ -30,6 +30,7 @@ export default function Carousel({ items, direction, delay }: CarouselProps) {
     useState<number>(
       0
     ); /*stato che tiene conto della PAGINA, contenente due items, da mostrare */
+  const scrollRef = useRef<ScrollView>(null);
   const ItemsPerPage: number = 2; /*costante, due items alla volta per pagina visualizzata nel carosello */
   const totalPages = Math.ceil(items.length / ItemsPerPage);
 
@@ -48,10 +49,20 @@ export default function Carousel({ items, direction, delay }: CarouselProps) {
       let nextPage = currentPage + 1;
       if (nextPage >= totalPages) {
         nextPage = 0;
-
-        /*qui metterò la logica di scroll automatico */
       }
       setCurrentPage(nextPage);
+
+      scrollRef.current?.scrollTo({
+        x:
+          direction === "horizontal"
+            ? nextPage * (screenWidth - 90)
+            : 0 /*  nextPage * (screenWidth - 90)  stiamo dicendo di spostarsi letteralmente di una pagina alla volta.  (screenWidth - 90) è una pagina*/,
+        y:
+          direction === "vertical"
+            ? nextPage * 150
+            : 0 /*  nextPage * 150  stiamo dicendo di spostarsi verticalmente di una pagina alla volta. la nostra pagina è alta 150*/,
+        animated: true,
+      });
     }, delay);
 
     return () => clearTimeout(timer);
@@ -71,6 +82,7 @@ export default function Carousel({ items, direction, delay }: CarouselProps) {
           horizontal={scrollDirection}
           pagingEnabled
           showsHorizontalScrollIndicator={false}
+          ref={scrollRef}
         >
           {pages.length > 0 &&
             pages.map(
