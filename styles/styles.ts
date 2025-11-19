@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   containerCarouselPages: {},
   containerCarouselPage: {},
   titleItem: {},
-  titleImage: {},
+  imageItem: {},
 });
 
 export default styles;
